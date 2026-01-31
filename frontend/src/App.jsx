@@ -3,14 +3,25 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import PostDetail from './pages/PostDetail'
 import CreatePost from './pages/CreatePost'
+import { useAuth } from './context/AuthContext'
 
 export default function App(){
+    const { user, logout } = useAuth();
+    
     return(
         <>
         <nav>
             <Link to="/">Home</Link> | {" "}
-            <Link to="/login">Login</Link> | {" "}
-            <Link to="/create">Create Post</Link>
+            {user 
+            ? (
+                <>
+                <Link to="/create">Create Post</Link>
+                <button onClick={logout}>Logout</button>
+                </>
+            )
+            : (
+                <Link to="/login">Login</Link>
+            )}
         </nav>
 
         <Routes>
