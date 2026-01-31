@@ -5,7 +5,7 @@ export const getPosts = async() => {
 }
 
 export const getPostById = async(id) => {
-    return posts.find(p => p.id === id);
+    return posts.find(p => p.id === Number(id));
 }
 
 export const createPost = async (data) => {

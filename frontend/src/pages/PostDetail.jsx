@@ -1,16 +1,20 @@
 import { useParams } from "react-router-dom"
-import { posts } from "../api/fakePosts";
 import { useAuth } from "../context/AuthContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getPostById } from "../api/post.api";
+import { getCommentsByPost } from "../api/comment.api";
+import CommentList from "../components/CommentList";
+import CommentForm from "../components/CommentForm";
 
 export default function PostDetail(){
     const { id } = useParams();
     const { user } = useAuth();
     const [post, setPost] = useState(null);
+    const [comments, setComments] = useState([]);
 
     useEffect(() => {
         getPostById(id).then(setPost);
+        getCommentsByPost(id).then(setComments)
     }, [id]);
 
     if(!post) return <p>Loading...</p>
@@ -29,7 +33,8 @@ export default function PostDetail(){
                     <button>Delete</button>
                 </>
             )}
-            
+            <CommentList comments={comments}/>
+            <CommentForm postId={id}/>
         </div>
     )
 }
