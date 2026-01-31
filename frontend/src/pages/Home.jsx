@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom"
-import { posts } from "../api/fakePosts"
+import { useEffect, useState } from "react";
+import { getPosts } from "../api/post.api";
 
 export default function Home(){
+    const [ posts, setPosts ] = useState([]);
+    useEffect(()=>{
+        getPosts().then(data => setPosts(data))
+    }, [])
+
     return(
         <>
         <div>

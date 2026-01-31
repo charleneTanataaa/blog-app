@@ -1,12 +1,17 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { createPost } from "../api/post.api";
 
 export default function CreatePost(){
     const [ title, setTitle ] = useState("");
     const [ content, setContent ] = useState("");
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Create post: ", title, content);
+        if(!title || !content) return alert('Required.');
+        await createPost({ title, content });
+        navigate("/");
     }
     return(
         <>
