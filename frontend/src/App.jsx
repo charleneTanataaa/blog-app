@@ -4,6 +4,7 @@ import Login from './pages/Login'
 import PostDetail from './pages/PostDetail'
 import CreatePost from './pages/CreatePost'
 import { useAuth } from './context/AuthContext'
+import ProtectedRoute from './routes/ProtectedRoute'
 
 export default function App(){
     const { user, logout } = useAuth();
@@ -28,7 +29,12 @@ export default function App(){
             <Route path="/" element={<Home />} />
             <Route path='/posts/:id' element={<PostDetail/>} />
             <Route path="/login" element={<Login />}/>
-            <Route path='/create' element={<CreatePost />}/>
+            <Route path='/create' element={
+                <ProtectedRoute>
+                    <CreatePost />
+                </ProtectedRoute>
+            }
+            />
         </Routes>
         </>
     )
