@@ -1,7 +1,7 @@
 import { comments } from "./fakeComments"
 
 export const getCommentsByPost = async (postId) => {
-    return comments.filter(c => c.postId === Number(postId));
+    return comments.filter(c => c.postId === postId);
 }
 
 export const addComment = async(postId, content, userId) => {
