@@ -30,3 +30,48 @@ exports.getPosts = async (req, res) => {
         res.status(500).json({message: error.message});
     }
 }
+
+exports.getPostById = async (req, res) => {
+    try{
+        const post = await Post.findById(req.params.id)
+        .populate("author", "name email");
+
+        if(!post)
+            return res.status(404).json({ message: "Post not found"});
+
+        res.json(post);
+    } catch (error){
+        res.status(500).json({ message: error.message });
+    }
+}
+
+exports.updatePost = async (req, res) => {
+    try{
+        const post = await Post.findById(req.params.id);
+        if(!post)
+            return res.status(404).json({ message:"Post not found. "});
+
+        post.title = req.body.title || post.title;
+        post.content = req.body.content || post.content;
+
+        await post.save();
+        res.json(post);
+    }catch (error){
+        res.status(500).json({message: error.message});
+    }
+}
+
+exports.deletePost = async (req, res) => {
+    try{
+        const post = await Post.findById(req.params.id);
+        if(!post)
+            return res.status(404).json({ message: "Post not found" });
+        if(post.author.toString() !== req.user.id)
+            return res.status(403).json({ message: "Forbidden" });
+
+        await post.deleteOne();
+        res.json({ message: "Post deleted"});
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
