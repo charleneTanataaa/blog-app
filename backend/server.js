@@ -21,6 +21,9 @@ app.use("/auth", authRoutes);
 const postRoutes = require("./routes/post.routes")
 app.use("/posts", postRoutes);
 
+const commentRoutes = require('./routes/comment.routes');
+app.use("/comments", commentRoutes);
+
 app.listen(process.env.PORT || 3001, () => {
     console.log(`Server running on port `);
 })
