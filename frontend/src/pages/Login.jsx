@@ -1,22 +1,28 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { api } from '../api/axios';
 
 export default function Login(){
     const [ email, setEmail ]= useState("");
     const [ password, setPassword ] = useState("");
-    const { login } = useAuth();
+    const { setUser } = useAuth();
     const navigate = useNavigate();
 
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        login(email);
+        try {
+        const res = await api.post("/auth/login", {email, password});
+        localStorage.setItem("token", res.data.token);
+        setUser(res.data.user);
         navigate("/");
+        } catch (err){
+            console.error(err.response?.data?.message || err.message);
+        }
     }
     return(
         <>
-        <form action="" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
             <h2>Login</h2>
             
             <label htmlFor="email">Email</label>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPost } from "../api/post.api";
+import {api} from '../api/axios';
 
 export default function CreatePost(){
     const [ title, setTitle ] = useState("");
@@ -9,8 +10,7 @@ export default function CreatePost(){
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if(!title || !content) return alert('Required.');
-        await createPost({ title, content });
+        await api.post("/posts", {title, content});
         navigate("/");
     }
     return(
