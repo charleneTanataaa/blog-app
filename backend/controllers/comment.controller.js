@@ -18,6 +18,9 @@ exports.createComment = async (req, res) => {
             post: postId,
             author: req.user.id
         });
+        await comment.populate("author", "name email");
+
+        
         res.status(201).json(comment);
     } catch (error){
         res.status(500).json({ message: error.message});
@@ -30,9 +33,48 @@ exports.getCommentsByPost = async (req, res) => {
         const comments = await Comment.find({ post: postId })
             .populate("author", "name email")
             .sort({ createdAt: 1})
-        
+
+       
         res.json(comments);
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+}
+
+exports.updateComment = async(req, res) => {
+    try{
+        const {content} = req.body;
+        const {commentId} = req.params;
+        const comment = await Comment.findById(commentId);
+        if(!comment) 
+            return res.status(404).json({message: "Comment not found"});
+
+        if(comment.author.toString() !== req.user.id)
+            return res.status(403).json({message: "Forbidden"});
+
+        comment.content = content || comment.content;
+        await comment.save();
+        await comment.populate("author", "name email");
+        res.json(comment);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
+exports.deleteComment = async(req, res) =>{
+    try{
+        const { commentId } = req.params;
+        const comment = await Comment.findById(commentId);
+        if(!comment)
+            return res.status(404).json({ message: "Comment not found."})
+
+        if(comment.author.toString() !== req.user.id){
+            return res.status(403).json({ message: "Forbidden "})
+        }
+
+        await comment.deleteOne();
+        res.json({ message: "Comment deleted"});
+    } catch (err){
+        res.status(500).json({ message: err.message});
     }
 }

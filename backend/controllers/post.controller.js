@@ -19,7 +19,7 @@ exports.createPost = async (req, res) => {
     }
 }
 
-exports.getPosts = async (req, res) => {
+exports.getAllPosts = async (req, res) => {
     try{
         const posts = await Post.find()
         .populate("author", "name email")
@@ -32,18 +32,22 @@ exports.getPosts = async (req, res) => {
 }
 
 exports.getPostById = async (req, res) => {
-    try{
-        const post = await Post.findById(req.params.id)
-        .populate("author", "name email");
+  try {
+    console.log("POST ID:", req.params.id);
 
-        if(!post)
-            return res.status(404).json({ message: "Post not found"});
+    const post = await Post.findById(req.params.id)
+      .populate("author", "name email");
 
-        res.json(post);
-    } catch (error){
-        res.status(500).json({ message: error.message });
-    }
-}
+    if (!post)
+      return res.status(404).json({ message: "Post not found" });
+
+    res.json(post);
+  } catch (error) {
+    console.error("GET POST ERROR:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 exports.updatePost = async (req, res) => {
     try{
