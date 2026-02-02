@@ -11,6 +11,14 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.local
+dist/
+build/
+.DS_Store
+*.log
+npm-debug.log*
+.vite/
 
 # Editor directories and files
 .vscode/*
